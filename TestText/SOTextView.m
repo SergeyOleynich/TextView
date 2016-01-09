@@ -37,12 +37,32 @@
         return ;
     }
     if (!self.shouldAnimating) {
+        self.pointY = self.pointY - 1;
         return;
     }
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self animateText];
     });
     
+}
+
+#pragma mark - Override
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(copy:))
+        return YES;
+    return NO;
+}
+
+#pragma mark - Touches
+
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    if (self.shouldAnimating) {
+        self.shouldAnimating = NO;
+    } else {
+        self.shouldAnimating = YES;
+        [self animateText];
+    }
 }
 
 #pragma mark - Public methods
